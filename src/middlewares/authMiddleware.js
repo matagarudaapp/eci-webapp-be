@@ -23,7 +23,7 @@ module.exports.requireAuthAdmin = (req, res, next) => {
 			if (decoded.roles && decoded.roles.includes('ADMIN')) {
 				next();
 			} else {
-				res.status(403).json({ error: 'Forbidden' });
+				res.status(403).json(new ResponseDto(false, null, "Forbidden"));
 				return 
 			}
 		} catch(err){
