@@ -21,7 +21,7 @@ module.exports.signup_post = async (req, res) => {
   } catch (error) {
     console.log(error)
     if(error.name == 'SequelizeUniqueConstraintError'){
-        res.status(400).json(new ResponseDto(false, null, "Email sudah terdaftar"));
+        res.status(400).json(new ResponseDto(false, null, "Email already been used"));
         return;
     }
     res.status(400).json(new ResponseDto(false, null, 'Failed to create user'));
