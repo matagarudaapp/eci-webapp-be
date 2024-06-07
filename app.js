@@ -20,7 +20,7 @@ db.sequelize.sync()
 
     // corsMiddleware
     const corsOptions = {
-      origin: [process.env.ORIGIN1],
+      origin: [process.env.ORIGIN1, process.env.ORIGIN2],
       credentials: true,
       optionSuccessStatus: 200,
     }
