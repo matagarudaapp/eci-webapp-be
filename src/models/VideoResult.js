@@ -7,8 +7,24 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false,
           primaryKey: true
         },
+        videoName: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        inspectionDate: {
+          type: DataTypes.DATE,
+          allowNull: false
+        },
+        inspectorName: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
         filePath: {
           type: DataTypes.STRING,
+          allowNull: true
+        },
+        filePathPictures: {
+          type: DataTypes.ARRAY(DataTypes.STRING),
           allowNull: true
         },
     })
