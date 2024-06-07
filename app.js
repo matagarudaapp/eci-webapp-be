@@ -24,7 +24,7 @@ db.sequelize.sync()
       credentials: true,
       optionSuccessStatus: 200,
     }
-    app.use(cors());
+    app.use(cors(corsOptions));
 
     // swaggerMiddleware
     const options = {
