@@ -35,7 +35,11 @@ module.exports.initateVideoResultRecord_post = (req, res) => {
   }
 };
 module.exports.videoResults_get = async (req, res) => {
-  const videoResults = await VideoResultService.getAllVideoResult();
+  const needVerificationOnly = req.query.needVerification;
+
+  const videoResults = await VideoResultService.getAllVideoResult(
+    needVerificationOnly === "true" ? true : false
+  );
 
   res
     .status(200)

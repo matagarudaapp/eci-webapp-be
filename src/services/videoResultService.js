@@ -1,4 +1,5 @@
 const videoResultModel = require("../models").VideoResult;
+const { Op } = require("sequelize");
 
 class VideoResultService {
   constructor(videoResultModel) {
@@ -33,8 +34,17 @@ class VideoResultService {
       );
   }
 
-  async getAllVideoResult() {
-    return await this.videoResultModel.findAll();
+  async getAllVideoResult(needVerificationOnly = false) {
+    if (!needVerificationOnly) return await this.videoResultModel.findAll();
+
+    return await this.videoResultModel.findAll({
+      where: {
+        [Op.or]: [
+          { detectionStatus: "SUBMITTED" },
+          { detectionStatus: "ON_VERIFICATION" },
+        ],
+      },
+    });
   }
 
   async getVideoResult(id) {
