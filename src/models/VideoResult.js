@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.STRING,
           allowNull: false
         },
+        videoUrl: {
+          type: DataTypes.STRING,
+          allowNull: true
+        },
         filePathCsv: {
           type: DataTypes.STRING,
           allowNull: true
