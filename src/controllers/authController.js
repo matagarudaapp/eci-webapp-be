@@ -6,7 +6,7 @@ module.exports.signup_post = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   // Validate the UserDto
-  const { error } = userDtoSchema.validate({ name, email, password });
+  const { error } = userDtoSchema.validate({ name, email, password, role });
   if (error) {
     return res.status(400).json(new ResponseDto(false, null, error.details[0].message));
   }
