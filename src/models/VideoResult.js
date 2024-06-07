@@ -27,8 +27,8 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.ARRAY(DataTypes.STRING),
           allowNull: true
         },
-        isDetectionDone: {
-          type: DataTypes.BOOLEAN,
+        detectionStatus: {
+          type: DataTypes.STRING,
           allowNull: false
         },
     })
