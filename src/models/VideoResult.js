@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.STRING,
           allowNull: false
         },
-        filePath: {
+        filePathCsv: {
           type: DataTypes.STRING,
           allowNull: true
         },
