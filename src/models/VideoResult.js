@@ -2,8 +2,7 @@ module.exports = (sequelize, DataTypes) => {
     const VideoResult = sequelize.define('VideoResult', {
         // Model attributes
         id: {
-          type: DataTypes.INTEGER,
-          autoIncrement: true,
+          type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true
         },
