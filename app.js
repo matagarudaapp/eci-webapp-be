@@ -26,7 +26,7 @@ db.sequelize
       credentials: true,
       optionSuccessStatus: 200,
     };
-    app.use(cors());
+    app.use(cors(corsOptions));
     app.use("/videoResult", authMiddleware.requireAuth, videoResultRoutes);
 
     // swaggerMiddleware
