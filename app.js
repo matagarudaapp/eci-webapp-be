@@ -17,6 +17,13 @@ db.sequelize.sync()
     // middleware
     app.use(express.static('public'));
     app.use(express.json());
+
+    // corsMiddleware
+    const corsOptions = {
+      origin: [process.env.ORIGIN1],
+      credentials: true,
+      optionSuccessStatus: 200,
+    }
     app.use(cors());
 
     // swaggerMiddleware
