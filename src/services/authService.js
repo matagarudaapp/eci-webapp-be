@@ -10,10 +10,10 @@ class AuthService {
     this.roleModel = roleModel;
   }
 
-  async signUpCreateUser(name, email, password) {
+  async signUpCreateUser(name, email, password, role) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.userModel.create({ name: name, email: email, password: hashedPassword });
-    const userRole = await this.roleModel.findOne({ where: { name: 'USER' } });
+    const userRole = await this.roleModel.findOne({ where: { name: role } });
     await user.addRole(userRole);
     return user;
   }

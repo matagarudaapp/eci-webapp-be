@@ -3,7 +3,7 @@ const userDtoSchema = require('../validations/UserDtoSchema');
 const AuthService = require('../services/authService');
 
 module.exports.signup_post = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   // Validate the UserDto
   const { error } = userDtoSchema.validate({ name, email, password });
@@ -15,7 +15,7 @@ module.exports.signup_post = async (req, res) => {
     // Create a new UserDto
     //const userDto = new UserDto(name, email, password);
 
-    await AuthService.signUpCreateUser(name, email, password);
+    await AuthService.signUpCreateUser(name, email, password, role);
 
     res.status(201).json(new ResponseDto(true, null, 'User created successfully'));
   } catch (error) {
