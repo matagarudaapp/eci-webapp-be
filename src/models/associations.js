@@ -1,4 +1,4 @@
-module.exports.init = (User, Role) => {
+module.exports.init = (User, Role, VideoResult) => {
     User.belongsToMany(Role, { through: 'UserRoles' });
     Role.belongsToMany(User, { through: 'UserRoles' });
 }
