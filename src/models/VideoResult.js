@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.ARRAY(DataTypes.STRING),
           allowNull: true
         },
+        isDetectionDone: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false
+        },
     })
 
     return VideoResult;
