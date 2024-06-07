@@ -12,13 +12,10 @@ db.sequelize
     const swaggerJsdoc = require("swagger-jsdoc");
     const swaggerUi = require("swagger-ui-express");
     const authMiddleware = require("./src/middlewares/authMiddleware");
-    const cors = require("cors");
 
     const authRoutes = require("./src/routes/authRoute");
     const testRoutes = require("./src/routes/testRoute");
     const videoResultRoutes = require("./src/routes/videoResultRoute");
-
-    const authMiddleware = require("./src/middlewares/authMiddleware");
 
     // middleware
     app.use(express.static("public"));

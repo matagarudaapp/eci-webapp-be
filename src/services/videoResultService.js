@@ -45,7 +45,26 @@ class VideoResultService {
     });
   }
 
-  async updateVideoResult(id, data) {}
+  async updateVideoResult(id, { status, videoUrl, filePathCsv }) {
+    const videoResult = this.getVideoResult(id);
+
+    if (videoResult === null) {
+      throw new Error("Not Found");
+    }
+
+    await this.videoResultModel.update(
+      {
+        detectionStatus: status,
+        videoUrl: videoUrl,
+        filePathCsv: filePathCsv,
+      },
+      {
+        where: {
+          id,
+        },
+      }
+    );
+  }
 }
 
 module.exports = new VideoResultService(videoResultModel);
