@@ -10,7 +10,8 @@ db.sequelize.sync()
     const swaggerUi = require("swagger-ui-express");
 
     const authRoutes = require('./src/routes/authRoute');
-    const testRoutes = require('./src/routes/testRoute')
+    const testRoutes = require('./src/routes/testRoute');
+    const videoResultRoutes = require('./src/routes/videoResultRoute');
 
     // middleware
     const authMiddleware = require('./src/middlewares/authMiddleware')
@@ -23,6 +24,7 @@ db.sequelize.sync()
     // app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
     app.use("/auth",authRoutes);
     app.use("/test", authMiddleware.requireAuth, testRoutes);
+    app.use("/videoResult", authMiddleware.requireAuth, videoResultRoutes);
 
     // swagger
     const options = {
