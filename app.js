@@ -8,23 +8,18 @@ db.sequelize.sync()
     const port = 3000
     const swaggerJsdoc = require("swagger-jsdoc");
     const swaggerUi = require("swagger-ui-express");
+    const authMiddleware = require('./src/middlewares/authMiddleware')
+    const cors = require('cors');
 
     const authRoutes = require('./src/routes/authRoute');
     const testRoutes = require('./src/routes/testRoute')
 
     // middleware
-    const authMiddleware = require('./src/middlewares/authMiddleware')
     app.use(express.static('public'));
     app.use(express.json());
+    app.use(cors());
 
-    // routes
-    // app.get('*', checkUser);
-    // app.get('/', (req, res) => res.render('home'));
-    // app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
-    app.use("/auth",authRoutes);
-    app.use("/test", authMiddleware.requireAuth, testRoutes);
-
-    // swagger
+    // swaggerMiddleware
     const options = {
       definition: {
         openapi: "3.1.0",
@@ -59,6 +54,13 @@ db.sequelize.sync()
       swaggerUi.serve,
       swaggerUi.setup(specs)
     );
+
+    //// routes
+    // app.get('*', checkUser);
+    // app.get('/', (req, res) => res.render('home'));
+    // app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
+    app.use("/auth",authRoutes);
+    app.use("/test", authMiddleware.requireAuth, testRoutes);
 
     app.listen(port, () => {
       console.log(`Example app listening on port ${port}`)
