@@ -2,8 +2,7 @@ module.exports = (sequelize, DataTypes) => {
     const VideoResult = sequelize.define('VideoResult', {
         // Model attributes
         id: {
-          type: DataTypes.INTEGER,
-          autoIncrement: true,
+          type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true
         },
@@ -18,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
         inspectorName: {
           type: DataTypes.STRING,
           allowNull: false
+        },
+        videoUrl: {
+          type: DataTypes.STRING,
+          allowNull: true
         },
         filePathCsv: {
           type: DataTypes.STRING,

@@ -5,6 +5,8 @@ db.sequelize
     console.log("Synced db.");
 
     const express = require("express");
+    const cors = require("cors");
+
     const app = express();
     const port = 3000;
     const swaggerJsdoc = require("swagger-jsdoc");
@@ -15,6 +17,8 @@ db.sequelize
     const authRoutes = require("./src/routes/authRoute");
     const testRoutes = require("./src/routes/testRoute");
     const videoResultRoutes = require("./src/routes/videoResultRoute");
+
+    const authMiddleware = require("./src/middlewares/authMiddleware");
 
     // middleware
     app.use(express.static("public"));
@@ -66,6 +70,7 @@ db.sequelize
     // app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
     app.use("/auth", authRoutes);
     app.use("/test", authMiddleware.requireAuth, testRoutes);
+    app.use("/videoResult", authMiddleware.requireAuth, videoResultRoutes);
 
     app.listen(port, () => {
       console.log(`Example app listening on port ${port}`);
