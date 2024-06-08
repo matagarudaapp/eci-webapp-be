@@ -1,38 +1,32 @@
 const videoResultModel = require("../models").VideoResult;
 const { Op } = require("sequelize");
 const { uploadCsv } = require("./cloudStorageService");
+const jwt = require("jsonwebtoken");
+const { v4: uuidv4 } = require("uuid");
 
 class VideoResultService {
   constructor(videoResultModel) {
     this.videoResultModel = videoResultModel;
   }
 
-  initiateVideoResult(
+  async initiateVideoResult(
     videoName,
     inspectionDate,
     inspectorName,
-    uuid,
     bearerToken
   ) {
     const token = bearerToken.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const videoResult = videoResultModel.create({
-      id: uuid,
+    const idVideoResult = uuidv4();
+    const videoResult = await videoResultModel.create({
+      id: idVideoResult,
       videoName,
       inspectionDate,
       inspectorName,
       detectionStatus: "pending",
       userId: decoded.id,
     });
-    return res
-      .status(201)
-      .json(
-        new ResponseDto(
-          true,
-          videoResult,
-          "Video result initiated successfully"
-        )
-      );
+    return videoResult;
   }
 
   async getAllVideoResult(needVerificationOnly = false) {

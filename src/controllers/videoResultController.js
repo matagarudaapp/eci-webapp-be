@@ -2,21 +2,20 @@ const ResponseDto = require("../models/dto/response/ResponseDto");
 const VideoResultService = require("../services/videoResultService");
 const initiateVideoResultSchema = require("../validations/InitiateVideoResultSchema");
 const UpdateVideoResultSchmea = require("../validations/UpdateVideoResultSchema");
-const jwt = require("jsonwebtoken");
 
 module.exports.videoResultFilePathFromModel_post = (req, res) => {};
 
-module.exports.initateVideoResultRecord_post = (req, res) => {
+module.exports.initateVideoResultRecord_post = async (req, res) => {
   try {
     const result = initiateVideoResultSchema.validate(req.body);
     if (result.error) {
       return res.status(400).json({ error: result.error.details[0].message });
     }
-    const dataResponse = VideoResultService.initiateVideoResult(
+
+    const dataResponse = await VideoResultService.initiateVideoResult(
       req.body.videoName,
       req.body.inspectionDate,
       req.body.inspectorName,
-      req.body.uuid,
       req.headers.authorization
     );
     return res
@@ -146,3 +145,5 @@ module.exports.videoResult_patch = async (req, res) => {
       .json(new ResponseDto(false, e, "Failed to update video result"));
   }
 };
+
+module.exports.videoResult_analysis = async (req, res) => {};
