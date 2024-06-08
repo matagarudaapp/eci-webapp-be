@@ -1,9 +1,9 @@
 const videoResultModel = require("../models").VideoResult;
 const { Op } = require("sequelize");
-const { uploadCsv } = require("./cloudStorageService");
+const { uploadCsv, getCsvContent } = require("./cloudStorageService");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
-
+const { parse } = require("csv-parse/sync");
 class VideoResultService {
   constructor(videoResultModel) {
     this.videoResultModel = videoResultModel;
@@ -57,7 +57,7 @@ class VideoResultService {
       throw new Error("Not Found");
     }
 
-    const csvUrl = status === "SUBMITTED" ? await uploadCsv(file) : "";
+    const csvUrl = status === "VERIFIED" ? await uploadCsv(file, id) : "";
     await this.videoResultModel.update(
       {
         detectionStatus: status,
@@ -70,6 +70,71 @@ class VideoResultService {
         },
       }
     );
+  }
+
+  async getVideoResultAnalysis(videoResult) {
+
+    const csvString = await getCsvContent(videoResult.id);
+
+    const csvData = parse(csvString, { columns: true });
+
+    const roadCondition = {
+      undamaged: 0,
+      mildDamage: 0,
+      moderateDamage: 0,
+      severeDamage: 0,
+    };
+    const totalVolumeCrack = {
+      pothole: 0,
+      alligator: 0,
+      longAndLatCrack: 0,
+    };
+    let maintenanceCostEstimation = 0;
+    const numberOfCrack = {
+      pothole: 0,
+      alligator: 0,
+      lateralCrack: 0,
+      longitudinalCrack: 0,
+    };
+
+    csvData.forEach((row) => {
+      // count number of crack
+      numberOfCrack.longitudinalCrack += Number(row["Long Crack Found"]);
+      numberOfCrack.lateralCrack += Number(row["Lat Crack Found"]);
+      numberOfCrack.alligator += Number(row["Alligator Crack Found"]);
+      numberOfCrack.pothole += Number(row["Pothole Found"]);
+
+      // count total volume crack
+      totalVolumeCrack.longAndLatCrack += Number(row["Total Crack Length (m)"]);
+      totalVolumeCrack.alligator += Number(row["Alligator Crack Area (m2)"]);
+      totalVolumeCrack.pothole += Number(row["Pothole Area (m2)"]);
+
+      // count cost estimation
+      maintenanceCostEstimation += Number(row["Repair Cost (Long) (Rp)"]);
+      maintenanceCostEstimation += Number(row["Repair Cost (Lat) (Rp)"]);
+      maintenanceCostEstimation += Number(row["Repair Cost (Alligator) (Rp)"]);
+      maintenanceCostEstimation += Number(row["Repair Cost (Pothole) (Rp)"]);
+
+      // count road condition
+      const nodeRoadCondition = row["Node Road Condition"];
+      if (nodeRoadCondition === "Tidak Rusak") {
+        roadCondition.undamaged++;
+      } else if (nodeRoadCondition === "Rusak Ringan") {
+        roadCondition.mildDamage++;
+      } else if (nodeRoadCondition === "Rusak Sedang") {
+        roadCondition.moderateDamage++;
+      } else if (nodeRoadCondition === "Rusak Berat") {
+        roadCondition.severeDamage++;
+      }
+    });
+
+    return {
+      downloadUrl: videoResult.csvUrl,
+      roadCondition,
+      totalVolumeCrack,
+      maintenanceCostEstimation,
+      numberOfCrack,
+    };
   }
 }
 

@@ -146,4 +146,28 @@ module.exports.videoResult_patch = async (req, res) => {
   }
 };
 
-module.exports.videoResult_analysis = async (req, res) => {};
+module.exports.videoResultAnalysis = async (req, res) => {
+  const id = req.params.id;
+
+  const videoResult = await VideoResultService.getVideoResult(id);
+
+  if (videoResult === null) {
+    res
+      .status(404)
+      .json(
+        new ResponseDto(
+          false,
+          null,
+          "Video result with the given id not exists"
+        )
+      );
+  }
+
+  const responseData = await VideoResultService.getVideoResultAnalysis(
+    videoResult
+  );
+
+  res
+    .status(200)
+    .json(new ResponseDto(true, responseData, "Successfully get video result"));
+};
