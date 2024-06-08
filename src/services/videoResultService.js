@@ -1,4 +1,5 @@
 const videoResultModel = require('../models').VideoResult;
+const jwt = require('jsonwebtoken');
 
 class VideoResultService {
   constructor(videoResultModel) {
@@ -16,7 +17,7 @@ class VideoResultService {
         detectionStatus: 'pending',
         userId: decoded.id
     });
-    return res.status(201).json(new ResponseDto(true, videoResult, 'Video result initiated successfully'));
+    return videoResult;
   }
 }
 
