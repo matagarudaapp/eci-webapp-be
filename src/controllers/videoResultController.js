@@ -96,7 +96,7 @@ module.exports.videoResult_patch = async (req, res) => {
       .json(new ResponseDto(false, null, "Invalid status value"));
   }
 
-  if (status === "ON_VERIFICATION" && videoUrl && file) {
+  if (status === "ON_VERIFICATION" && (videoUrl || file)) {
     return res
       .status(400)
       .json(
@@ -108,7 +108,7 @@ module.exports.videoResult_patch = async (req, res) => {
       );
   }
 
-  if (status === "VERIFIED" && !videoUrl && !file) {
+  if (status === "VERIFIED" && (!videoUrl || !file)) {
     return res
       .status(400)
       .json(
@@ -118,6 +118,12 @@ module.exports.videoResult_patch = async (req, res) => {
           '"VERIFIED" status must with video and csv file'
         )
       );
+  }
+
+  if (status === "VERIFIED" && file && !file.originalname.endsWith(".csv")) {
+    return res
+      .status(400)
+      .json(new ResponseDto(false, null, "Uploaded file must be a csv file"));
   }
 
   try {
@@ -131,16 +137,12 @@ module.exports.videoResult_patch = async (req, res) => {
       return res
         .status(404)
         .json(
-          new ResponseDto(
-            false,
-            null,
-            "Video result with the given id not exists"
-          )
+          new ResponseDto(false, e, "Video result with the given id not exists")
         );
     }
 
     res
-      .status(400)
-      .json(new ResponseDto(false, null, "Failed to update video result"));
+      .status(500)
+      .json(new ResponseDto(false, e, "Failed to update video result"));
   }
 };

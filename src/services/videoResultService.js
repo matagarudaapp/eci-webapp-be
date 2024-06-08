@@ -1,5 +1,6 @@
 const videoResultModel = require("../models").VideoResult;
 const { Op } = require("sequelize");
+const { uploadCsv } = require("./cloudStorageService");
 
 class VideoResultService {
   constructor(videoResultModel) {
@@ -62,11 +63,12 @@ class VideoResultService {
       throw new Error("Not Found");
     }
 
+    const csvUrl = await uploadCsv(file);
     await this.videoResultModel.update(
       {
         detectionStatus: status,
-        videoUrl: videoUrl,
-        filePathCsv: file.originalname,
+        videoUrl,
+        csvUrl,
       },
       {
         where: {
