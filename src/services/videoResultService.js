@@ -55,7 +55,7 @@ class VideoResultService {
     });
   }
 
-  async updateVideoResult(id, { status, videoUrl, filePathCsv }) {
+  async updateVideoResult(id, { status, videoUrl }, file) {
     const videoResult = this.getVideoResult(id);
 
     if (videoResult === null) {
@@ -66,7 +66,7 @@ class VideoResultService {
       {
         detectionStatus: status,
         videoUrl: videoUrl,
-        filePathCsv: filePathCsv,
+        filePathCsv: file.originalname,
       },
       {
         where: {

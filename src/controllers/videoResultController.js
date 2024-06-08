@@ -79,6 +79,7 @@ module.exports.videoResult_get_file = (req, res) => {};
 module.exports.videoResult_patch = async (req, res) => {
   const id = req.params.id;
   const data = req.body;
+  const file = req.file;
 
   const { error } = UpdateVideoResultSchmea.validate(data);
   if (error) {
@@ -87,7 +88,7 @@ module.exports.videoResult_patch = async (req, res) => {
       .json(new ResponseDto(false, null, error.details[0].message));
   }
 
-  const { status, videoUrl, filePathCsv } = data;
+  const { status, videoUrl } = data;
 
   if (status !== "ON_VERIFICATION" && status !== "VERIFIED") {
     return res
@@ -95,7 +96,7 @@ module.exports.videoResult_patch = async (req, res) => {
       .json(new ResponseDto(false, null, "Invalid status value"));
   }
 
-  if (status === "ON_VERIFICATION" && videoUrl && filePathCsv) {
+  if (status === "ON_VERIFICATION" && videoUrl && file) {
     return res
       .status(400)
       .json(
@@ -107,7 +108,7 @@ module.exports.videoResult_patch = async (req, res) => {
       );
   }
 
-  if (status === "VERIFIED" && !videoUrl && !filePathCsv) {
+  if (status === "VERIFIED" && !videoUrl && !file) {
     return res
       .status(400)
       .json(
@@ -120,7 +121,7 @@ module.exports.videoResult_patch = async (req, res) => {
   }
 
   try {
-    await VideoResultService.updateVideoResult(id, data);
+    await VideoResultService.updateVideoResult(id, data, file);
 
     res
       .status(200)
