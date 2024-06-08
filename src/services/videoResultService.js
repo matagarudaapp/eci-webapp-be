@@ -23,7 +23,7 @@ class VideoResultService {
       videoName,
       inspectionDate,
       inspectorName,
-      detectionStatus: "pending",
+      detectionStatus: "SUBMITTED",
       userId: decoded.id,
     });
     return videoResult;
