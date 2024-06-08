@@ -63,7 +63,7 @@ class VideoResultService {
       throw new Error("Not Found");
     }
 
-    const csvUrl = await uploadCsv(file);
+    const csvUrl = status === "SUBMITTED" ? await uploadCsv(file) : "";
     await this.videoResultModel.update(
       {
         detectionStatus: status,
