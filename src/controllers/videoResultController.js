@@ -11,7 +11,7 @@ module.exports.initateVideoResultRecord_post = (req, res) => {
     try {
         const result = initiateVideoResultSchema.validate(req.body);
         if (result.error) {
-            return res.status(400).json({error: result.error.details[0].message});
+            return res.status(400).json(new ResponseDto(false, null, result.error.message));
         }
         const dataResponse = videoResultService.initiateVideoResult(req.body.videoName, req.body.inspectionDate, req.body.inspectorName, req.body.uuid, req.headers.authorization);
         return res.status(201).json(new ResponseDto(true, dataResponse, 'Video result initiated successfully'));
