@@ -6,10 +6,10 @@ class VideoResultService {
     this.videoResultModel = videoResultModel;
   }
 
-  initiateVideoResult(videoName, inspectionDate, inspectorName, uuid, bearerToken) {
+  async initiateVideoResult(videoName, inspectionDate, inspectorName, uuid, bearerToken) {
     const token = bearerToken.split(' ')[1];
-		const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const videoResult = videoResultModel.create({
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const videoResult = await this.videoResultModel.create({
         id: uuid,
         videoName,
         inspectionDate,
@@ -17,7 +17,7 @@ class VideoResultService {
         detectionStatus: 'pending',
         userId: decoded.id
     });
-    return videoResult;
+    return videoResult.dataValues;
   }
 }
 
