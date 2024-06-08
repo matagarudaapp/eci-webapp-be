@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const storage = new Storage({
   projectId: process.env.PROJECT_ID,
-  keyFilename: "./storage-admin-key.json",
+  keyFilename: "./storage-admin-key.json", // put the service account key file on the root
 });
 
 const uploadFile = async (file, bucket, destination) => {
