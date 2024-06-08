@@ -22,12 +22,16 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.STRING,
           allowNull: true
         },
-        filePathCsv: {
+        csvUrl: {
           type: DataTypes.STRING,
           allowNull: true
         },
-        filePathPictures: {
-          type: DataTypes.ARRAY(DataTypes.STRING),
+        pictureUrl: {
+          type: DataTypes.STRING,
+          allowNull: true
+        },
+        pictureCoordinates: {
+          type: DataTypes.STRING,
           allowNull: true
         },
         detectionStatus: {
