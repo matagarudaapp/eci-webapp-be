@@ -1,12 +1,13 @@
 const ResponseDto = require('../models/dto/response/ResponseDto');
-const userDtoSchema = require('../validations/UserDtoSchema');
+const RegisterUserDtoSchema = require('../validations/RegisterUserDtoSchema');
 const AuthService = require('../services/authService');
+const LoginUserDtoSchema = require('../validations/LoginUserDtoSchema');
 
 module.exports.signup_post = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   // Validate the UserDto
-  const { error } = userDtoSchema.validate({ name, email, password });
+  const { error } = RegisterUserDtoSchema.validate({ name, email, password, role });
   if (error) {
     return res.status(400).json(new ResponseDto(false, null, error.details[0].message));
   }
@@ -15,7 +16,7 @@ module.exports.signup_post = async (req, res) => {
     // Create a new UserDto
     //const userDto = new UserDto(name, email, password);
 
-    await AuthService.signUpCreateUser(name, email, password);
+    await AuthService.signUpCreateUser(name, email, password, role);
 
     res.status(201).json(new ResponseDto(true, null, 'User created successfully'));
   } catch (error) {
@@ -31,7 +32,7 @@ module.exports.signup_post = async (req, res) => {
 module.exports.login_post = async (req, res) => {
     const {email, password} = req.body;
     // Validate the UserDto
-    const { error } = userDtoSchema.validate({ email, password });
+    const { error } = LoginUserDtoSchema.validate({ email, password });
     if (error) {
       return res.status(400).json(new ResponseDto(false, null, error.details[0].message));
     }
