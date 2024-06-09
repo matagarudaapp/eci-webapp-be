@@ -18,4 +18,5 @@ router.post(
   videoResultController.initateVideoResultRecord_post
 );
 
+router.get("/:id/analysis", videoResultController.videoResultAnalysis);
 module.exports = router;

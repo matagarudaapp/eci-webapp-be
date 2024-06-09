@@ -13,8 +13,21 @@ const uploadFile = async (file, bucket, destination) => {
   return url;
 };
 
-const uploadCsv = async (file) => {
-  return await uploadFile(file, "eci_matagaruda_bucket", `csv/${uuidv4()}.csv`);
+const uploadCsv = async (file, videoResultId) => {
+  return await uploadFile(
+    file,
+    "eci_matagaruda_bucket",
+    `csv/${videoResultId}.csv`
+  );
 };
 
-module.exports = { uploadCsv };
+const getCsvContent = async (fileName) => {
+  const [file] = await storage
+    .bucket("eci_matagaruda_bucket")
+    .file("csv/" + fileName + ".csv")
+    .download();
+  return file.toString();
+};
+
+
+module.exports = { uploadCsv, getCsvContent };
