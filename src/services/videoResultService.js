@@ -91,6 +91,8 @@ class VideoResultService {
       longitudinalCrack: 0,
     };
 
+    let roadOverallDamageScore = 0;
+
     csvData.forEach((row) => {
       // count number of crack
       numberOfCrack.longitudinalCrack += Number(row["Long Crack Found"]);
@@ -109,6 +111,9 @@ class VideoResultService {
       maintenanceCostEstimation += Number(row["Repair Cost (Alligator) (Rp)"]);
       maintenanceCostEstimation += Number(row["Repair Cost (Pothole) (Rp)"]);
 
+      // count road overall damage score
+      roadOverallDamageScore += Number(row["Node Crack Score"]);
+
       // count road condition
       const nodeRoadCondition = row["Node Road Condition"];
       if (nodeRoadCondition === "Tidak Rusak") {
@@ -124,10 +129,12 @@ class VideoResultService {
 
     return {
       downloadUrl: videoResult.csvUrl,
+      videoUrl: videoResult.videoUrl,
       roadCondition,
       totalVolumeCrack,
       maintenanceCostEstimation,
       numberOfCrack,
+      roadOverallDamageScore,
     };
   }
 }
