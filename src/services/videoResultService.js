@@ -2,7 +2,6 @@ const videoResultModel = require('../models').VideoResult;
 const jwt = require('jsonwebtoken');
 const { Op } = require("sequelize");
 const { uploadCsv, getCsvContent } = require("./cloudStorageService");
-const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const { parse } = require("csv-parse/sync");
 class VideoResultService {

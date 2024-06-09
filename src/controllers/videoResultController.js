@@ -1,9 +1,7 @@
 const ResponseDto = require('../models/dto/response/ResponseDto');
 const initiateVideoResultSchema = require('../validations/InitiateVideoResultSchema');
 const videoResultService = require('../services/videoResultService')
-const ResponseDto = require("../models/dto/response/ResponseDto");
 const VideoResultService = require("../services/videoResultService");
-const initiateVideoResultSchema = require("../validations/InitiateVideoResultSchema");
 const UpdateVideoResultSchmea = require("../validations/UpdateVideoResultSchema");
 
 module.exports.videoResultFilePathFromModel_post = (req, res) => {};
