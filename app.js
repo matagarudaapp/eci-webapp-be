@@ -29,6 +29,7 @@ db.sequelize
       optionSuccessStatus: 200,
     };
     app.use(cors(corsOptions));
+    app.options('*', cors(corsOptions));
 
     // swaggerMiddleware
     const options = {
