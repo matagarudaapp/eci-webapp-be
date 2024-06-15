@@ -23,13 +23,15 @@ db.sequelize
     app.use(express.json());
 
     // corsMiddleware
-    const corsOptions = {
-      origin: [process.env.ORIGIN1, process.env.ORIGIN2],
-      credentials: true,
-      optionSuccessStatus: 200,
-    };
-    app.use(cors(corsOptions));
-    app.options('*', cors(corsOptions));
+  //   const corsOptions = {
+  //     origin: 'https://eci-webapp-staging.vercel.app',
+  //     methods: 'GET,POST,PUT,DELETE,OPTIONS,PATCH',
+  //     allowedHeaders: 'Content-Type,Authorization',
+  //     credentials: true,
+  //     optionsSuccessStatus: 204, // Some legacy browsers (IE11, various SmartTVs) choke on 204
+  //     maxAge: 3600 // Cache the preflight response for 1 hour
+  // };
+  //   app.use(cors(corsOptions));
 
     // swaggerMiddleware
     const options = {
