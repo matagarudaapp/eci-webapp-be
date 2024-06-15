@@ -1,3 +1,5 @@
+const Joi = require('joi');
+
 const KategoriKerusakan  = {
     BAIK: "Baik",
     RUSAK_RINGAN:  "Rusak Ringan",
