@@ -1,12 +1,14 @@
 const videoResultModel = require('../models').VideoResult;
+const photoUploadModel = require('../models').PhotoUpload;
 const jwt = require('jsonwebtoken');
 const { Op } = require("sequelize");
-const { uploadCsv, getCsvContent } = require("./cloudStorageService");
+const { uploadCsv, getCsvContent, uploadPicture } = require("./cloudStorageService");
 const { v4: uuidv4 } = require("uuid");
 const { parse } = require("csv-parse/sync");
 class VideoResultService {
-  constructor(videoResultModel) {
+  constructor(videoResultModel, photoUploadModel) {
     this.videoResultModel = videoResultModel;
+    this.photoUploadModel = photoUploadModel;
   }
 
   async initiateVideoResult(videoName, inspectionDate, inspectorName, uuid, bearerToken) {
@@ -137,6 +139,26 @@ class VideoResultService {
       roadOverallDamageScore,
     };
   }
+
+  async photoUpload(file, body) {
+    const { fotoName, inspectionDate, inspectorName, jenisAssets, kategoriKerusakan, jenisKerusakan, picturesCoordinate } = body;
+
+    const uuid = uuidv4();
+    const pictureUrl = await uploadPicture(file, uuid);
+
+    return await this.photoUploadModel.create({
+      id: uuid,
+      fotoName,
+      inspectionDate,
+      inspectorName,
+      jenisAssets,
+      kategoriKerusakan,
+      jenisKerusakan,
+      picturesCoordinate,
+      pictureUrl,
+    });
+  
+  }
 }
 
-module.exports = new VideoResultService(videoResultModel);
+module.exports = new VideoResultService(videoResultModel, photoUploadModel);

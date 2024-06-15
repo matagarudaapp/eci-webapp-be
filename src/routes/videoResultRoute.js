@@ -1,16 +1,13 @@
 const { Router } = require("express");
-const multer = require("multer");
 const videoResultController = require("../controllers/videoResultController");
-
 const router = Router();
-
-const upload = multer({ storage: multer.memoryStorage() });
+const multerMemoryStorage = require("../middlewares/multerMiddleware").memoryStorage;
 
 router.get("/videoResults", videoResultController.videoResults_get);
 router.get("/videoResults/:id", videoResultController.videoResult_get);
 router.patch(
   "/videoResults/:id",
-  upload.single("file"),
+  multerMemoryStorage.single("file"),
   videoResultController.videoResult_patch
 );
 router.post(
@@ -19,4 +16,5 @@ router.post(
 );
 
 router.get("/:id/analysis", videoResultController.videoResultAnalysis);
+router.post("/uploadPicture", multerMemoryStorage.single("file"), videoResultController.uploadPhoto_post);
 module.exports = router;

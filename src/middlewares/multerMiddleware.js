@@ -17,3 +17,5 @@ module.exports.pictureStorage = multer.diskStorage({
       cb(null, file.originalname)
     }
 })
+
+module.exports.memoryStorage = multer.memoryStorage()

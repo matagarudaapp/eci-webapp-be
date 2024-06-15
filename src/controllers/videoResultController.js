@@ -3,6 +3,7 @@ const initiateVideoResultSchema = require('../validations/InitiateVideoResultSch
 const videoResultService = require('../services/videoResultService')
 const VideoResultService = require("../services/videoResultService");
 const UpdateVideoResultSchmea = require("../validations/UpdateVideoResultSchema");
+const photoUploadSchema = require("../validations/PhotoUploadSchema");
 
 module.exports.videoResultFilePathFromModel_post = (req, res) => {};
 
@@ -156,4 +157,20 @@ module.exports.videoResultAnalysis = async (req, res) => {
   res
     .status(200)
     .json(new ResponseDto(true, responseData, "Successfully get video result"));
+};
+
+module.exports.uploadPhoto_post =async (req, res) => {
+  try {
+    const result = photoUploadSchema.validate(req.body);
+    if (result.error) {
+        return res.status(400).json(new ResponseDto(false, null, result.error.message));
+    }
+    if(req.file === undefined){
+      return res.status(400).json(new ResponseDto(false, null, 'Photo is required'));
+    }
+    const response = await videoResultService.uploadPicture(req.file, req.body);
+    return res.status(201).json(new ResponseDto(true, response, 'Photo uploaded successfully'));
+  } catch (error) {
+    return res.status(400).json(new ResponseDto(false, null, 'Failed to upload photo'));
+  }
 };

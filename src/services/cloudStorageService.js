@@ -21,6 +21,14 @@ const uploadCsv = async (file, videoResultId) => {
   );
 };
 
+const uploadPicture = async (file, photoUploadId) => {
+  return await uploadFile(
+    file,
+    "eci_matagaruda_bucket",
+    `pictures/${photoUploadId}.`+file.mimetype.split("/")[1]
+  );
+};
+
 const getCsvContent = async (fileName) => {
   const [file] = await storage
     .bucket("eci_matagaruda_bucket")
@@ -30,4 +38,4 @@ const getCsvContent = async (fileName) => {
 };
 
 
-module.exports = { uploadCsv, getCsvContent };
+module.exports = { uploadCsv, getCsvContent, uploadPicture };

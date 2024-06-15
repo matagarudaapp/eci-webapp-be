@@ -5,6 +5,8 @@ const initiateVideoResultSchema = Joi.object({
   inspectionDate: Joi.date().required(),
   inspectorName: Joi.string().required(),
   // uuid: Joi.string().required(),
+  pictureUrl: Joi.string().required(),
+  pictureCoordinates: Joi.string().required(),
 });
 
 module.exports = initiateVideoResultSchema;
