@@ -1,8 +1,12 @@
-const videoResultModel = require('../models').VideoResult;
-const photoUploadModel = require('../models').PhotoUpload;
-const jwt = require('jsonwebtoken');
+const videoResultModel = require("../models").VideoResult;
+const photoUploadModel = require("../models").PhotoUpload;
+const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
-const { uploadCsv, getCsvContent, uploadPicture } = require("./cloudStorageService");
+const {
+  uploadCsv,
+  getCsvContent,
+  uploadPicture,
+} = require("./cloudStorageService");
 const { v4: uuidv4 } = require("uuid");
 const { parse } = require("csv-parse/sync");
 class VideoResultService {
@@ -11,22 +15,34 @@ class VideoResultService {
     this.photoUploadModel = photoUploadModel;
   }
 
-  async initiateVideoResult(videoName, inspectionDate, inspectorName, uuid, bearerToken) {
-    const token = bearerToken.split(' ')[1];
+  async initiateVideoResult(
+    videoName,
+    inspectionDate,
+    inspectorName,
+    uuid,
+    bearerToken
+  ) {
+    const token = bearerToken.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const videoResult = await this.videoResultModel.create({
-        id: uuid,
-        videoName,
-        inspectionDate,
-        inspectorName,
-        detectionStatus: 'SUBMITTED',
-        userId: decoded.id
+      id: uuid,
+      videoName,
+      inspectionDate,
+      inspectorName,
+      detectionStatus: "SUBMITTED",
+      userId: decoded.id,
     });
     return videoResult.dataValues;
   }
 
-  async getAllVideoResult(needVerificationOnly = false) {
-    if (!needVerificationOnly) return await this.videoResultModel.findAll();
+  async getAllVideoResult(needVerificationOnly = false, userId) {
+    if (!needVerificationOnly) {
+      return await this.videoResultModel.findAll({
+        where: {
+          userId,
+        },
+      });
+    }
 
     return await this.videoResultModel.findAll({
       where: {
@@ -69,7 +85,6 @@ class VideoResultService {
   }
 
   async getVideoResultAnalysis(videoResult) {
-
     const csvString = await getCsvContent(videoResult.id);
 
     const csvData = parse(csvString, { columns: true });
@@ -141,7 +156,15 @@ class VideoResultService {
   }
 
   async photoUpload(file, body) {
-    const { fotoName, inspectionDate, inspectorName, jenisAssets, kategoriKerusakan, jenisKerusakan, picturesCoordinate } = body;
+    const {
+      fotoName,
+      inspectionDate,
+      inspectorName,
+      jenisAssets,
+      kategoriKerusakan,
+      jenisKerusakan,
+      picturesCoordinate,
+    } = body;
 
     const uuid = uuidv4();
     const pictureUrl = await uploadPicture(file, uuid);
@@ -157,7 +180,6 @@ class VideoResultService {
       picturesCoordinate,
       pictureUrl,
     });
-  
   }
 }
 
