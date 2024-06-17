@@ -19,7 +19,7 @@ class VideoResultService {
         videoName,
         inspectionDate,
         inspectorName,
-        detectionStatus: 'ON_VERIFICATION',
+        detectionStatus: 'SUBMITTED',
         userId: decoded.id
     });
     return videoResult.dataValues;
