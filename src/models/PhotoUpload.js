@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const PhotoUpload = sequelize.define('VideoResult', {
+    const PhotoUpload = sequelize.define('PhotoUpload', {
         // Model attributes
         id: {
             type: DataTypes.UUID,

@@ -9,7 +9,7 @@ module.exports.requireAuth = async (req, res, next) => {
     req.user = await User.findByPk(decoded.id);
     next();
   } catch (err) {
-    res.status(401).json(new ResponseDto(false, null, "Not Authorized"));
+    res.status(401).json(new ResponseDto(false, null, err.message));
     return;
   }
 };

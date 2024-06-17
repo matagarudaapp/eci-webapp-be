@@ -168,9 +168,9 @@ module.exports.uploadPhoto_post =async (req, res) => {
     if(req.file === undefined){
       return res.status(400).json(new ResponseDto(false, null, 'Photo is required'));
     }
-    const response = await videoResultService.uploadPicture(req.file, req.body);
+    const response = await videoResultService.photoUpload(req.file, req.body);
     return res.status(201).json(new ResponseDto(true, response, 'Photo uploaded successfully'));
   } catch (error) {
-    return res.status(400).json(new ResponseDto(false, null, 'Failed to upload photo'));
+    return res.status(400).json(new ResponseDto(false, null, 'Failed to upload photo: ' + error.message));
   }
 };
