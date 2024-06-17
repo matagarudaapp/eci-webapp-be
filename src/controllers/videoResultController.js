@@ -1,6 +1,6 @@
-const ResponseDto = require('../models/dto/response/ResponseDto');
-const initiateVideoResultSchema = require('../validations/InitiateVideoResultSchema');
-const videoResultService = require('../services/videoResultService')
+const ResponseDto = require("../models/dto/response/ResponseDto");
+const initiateVideoResultSchema = require("../validations/InitiateVideoResultSchema");
+const videoResultService = require("../services/videoResultService");
 const VideoResultService = require("../services/videoResultService");
 const UpdateVideoResultSchmea = require("../validations/UpdateVideoResultSchema");
 const photoUploadSchema = require("../validations/PhotoUploadSchema");
@@ -8,23 +8,42 @@ const photoUploadSchema = require("../validations/PhotoUploadSchema");
 module.exports.videoResultFilePathFromModel_post = (req, res) => {};
 
 module.exports.initateVideoResultRecord_post = async (req, res) => {
-    try {
-        const result = initiateVideoResultSchema.validate(req.body);
-        if (result.error) {
-            return res.status(400).json(new ResponseDto(false, null, result.error.message));
-        }
-        const dataResponse = await videoResultService.initiateVideoResult(req.body.videoName, req.body.inspectionDate, req.body.inspectorName, req.body.uuid, req.headers.authorization);
-        return res.status(201).json(new ResponseDto(true, dataResponse, 'Video result initiated successfully'));
-    } catch (error) {
-        console.log(error.message)
-        return res.status(400).json(new ResponseDto(false, null, 'Failed to initiate video result'));
+  try {
+    const result = initiateVideoResultSchema.validate(req.body);
+    if (result.error) {
+      return res
+        .status(400)
+        .json(new ResponseDto(false, null, result.error.message));
     }
-}
+    const dataResponse = await videoResultService.initiateVideoResult(
+      req.body.videoName,
+      req.body.inspectionDate,
+      req.body.inspectorName,
+      req.body.uuid,
+      req.headers.authorization
+    );
+    return res
+      .status(201)
+      .json(
+        new ResponseDto(
+          true,
+          dataResponse,
+          "Video result initiated successfully"
+        )
+      );
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(400)
+      .json(new ResponseDto(false, null, "Failed to initiate video result"));
+  }
+};
 module.exports.videoResults_get = async (req, res) => {
   const needVerificationOnly = req.query.needVerification;
 
   const videoResults = await VideoResultService.getAllVideoResult(
-    needVerificationOnly === "true" ? true : false
+    needVerificationOnly === "true" ? true : false,
+    req.user.dataValues.id
   );
 
   res
@@ -159,18 +178,28 @@ module.exports.videoResultAnalysis = async (req, res) => {
     .json(new ResponseDto(true, responseData, "Successfully get video result"));
 };
 
-module.exports.uploadPhoto_post =async (req, res) => {
+module.exports.uploadPhoto_post = async (req, res) => {
   try {
     const result = photoUploadSchema.validate(req.body);
     if (result.error) {
-        return res.status(400).json(new ResponseDto(false, null, result.error.message));
+      return res
+        .status(400)
+        .json(new ResponseDto(false, null, result.error.message));
     }
-    if(req.file === undefined){
-      return res.status(400).json(new ResponseDto(false, null, 'Photo is required'));
+    if (req.file === undefined) {
+      return res
+        .status(400)
+        .json(new ResponseDto(false, null, "Photo is required"));
     }
     const response = await videoResultService.photoUpload(req.file, req.body);
-    return res.status(201).json(new ResponseDto(true, response, 'Photo uploaded successfully'));
+    return res
+      .status(201)
+      .json(new ResponseDto(true, response, "Photo uploaded successfully"));
   } catch (error) {
-    return res.status(400).json(new ResponseDto(false, null, 'Failed to upload photo: ' + error.message));
+    return res
+      .status(400)
+      .json(
+        new ResponseDto(false, null, "Failed to upload photo: " + error.message)
+      );
   }
 };
