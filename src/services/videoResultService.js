@@ -1,4 +1,5 @@
 const videoResultModel = require("../models").VideoResult;
+const userModel = require("../models").User;
 const photoUploadModel = require("../models").PhotoUpload;
 const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
@@ -41,6 +42,14 @@ class VideoResultService {
         where: {
           userId,
         },
+        include: [
+          {
+            model: userModel,
+            attributes: {
+              exclude: ["password"],
+            },
+          },
+        ],
       });
     }
 
@@ -51,6 +60,14 @@ class VideoResultService {
           { detectionStatus: "ON_VERIFICATION" },
         ],
       },
+      include: [
+        {
+          model: userModel,
+          attributes: {
+            exclude: ["password"],
+          },
+        },
+      ],
     });
   }
 
