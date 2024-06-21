@@ -17,6 +17,7 @@ db.sequelize
     const authRoutes = require("./src/routes/authRoute");
     const testRoutes = require("./src/routes/testRoute");
     const videoResultRoutes = require("./src/routes/videoResultRoute");
+    const dashboardRoutes = require("./src/routes/dashboardRoute");
 
     // middleware
     app.use(express.static("public"));
@@ -71,6 +72,7 @@ db.sequelize
     app.use("/auth", authRoutes);
     app.use("/test", authMiddleware.requireAuth, testRoutes);
     app.use("/videoResult", authMiddleware.requireAuth, videoResultRoutes);
+    app.use('/dashboard', dashboardRoutes)
 
     app.listen(port, () => {
       console.log(`Example app listening on port ${port}`);

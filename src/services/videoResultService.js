@@ -36,8 +36,8 @@ class VideoResultService {
     return videoResult.dataValues;
   }
 
-  async getAllVideoResult(needVerificationOnly = false, userId) {
-    if (!needVerificationOnly) {
+  async getAllVideoResult(needVerificationOnly = false, userId, roles) {
+    if (!needVerificationOnly && !roles.includes("ADMIN")) {
       return await this.videoResultModel.findAll({
         where: {
           userId,

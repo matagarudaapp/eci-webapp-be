@@ -41,9 +41,13 @@ module.exports.initateVideoResultRecord_post = async (req, res) => {
 module.exports.videoResults_get = async (req, res) => {
   const needVerificationOnly = req.query.needVerification;
 
+  const token = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
   const videoResults = await VideoResultService.getAllVideoResult(
     needVerificationOnly === "true" ? true : false,
-    req.user.dataValues.id
+    req.user.dataValues.id,
+    decoded.roles
   );
 
   res
