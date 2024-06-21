@@ -49,7 +49,7 @@ const getDashboardUserDataFromCsv = async (userId, roles) => {
             skip_empty_lines: true,
         });
 
-        console.log(csvData);
+        // console.log(csvData);
 
         csvData.forEach((row) => {
             // count number of crack
