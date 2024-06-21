@@ -37,13 +37,13 @@ const getDashboardUserDataFromCsv = async (userId, roles) => {
     let roadOverallDamageScore = 0;
 
     for (const videoResult of videoResults) {
-        const csvUrl = videoResult.csvUrl;
 
-        if (csvUrl === null) {
+        const csvContentString = await cloudStorageService.getCsvContent(videoResult.id);
+        
+        if (!csvContentString) {
             continue;
         }
 
-        const csvContentString = await cloudStorageService.getCsvContent(csvUrl);
         const csvData = parse(csvContentString, {
             columns: true,
             skip_empty_lines: true,
