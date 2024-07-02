@@ -3,7 +3,7 @@ const cloudStorageService = require("./cloudStorageService");
 const { parse } = require("csv-parse/sync");
 
 const getDashboardUserDataFromCsv = async (userId, roles) => {
-    const videoResults = null;
+    var videoResults = null;
 
     if(roles.includes("ADMIN")) {
         videoResults = videoResultModel.findAll();

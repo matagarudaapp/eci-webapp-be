@@ -4,6 +4,7 @@ const videoResultService = require("../services/videoResultService");
 const VideoResultService = require("../services/videoResultService");
 const UpdateVideoResultSchmea = require("../validations/UpdateVideoResultSchema");
 const photoUploadSchema = require("../validations/PhotoUploadSchema");
+const jwt = require("jsonwebtoken");
 
 module.exports.videoResultFilePathFromModel_post = (req, res) => {};
 
@@ -157,29 +158,38 @@ module.exports.videoResult_patch = async (req, res) => {
 };
 
 module.exports.videoResultAnalysis = async (req, res) => {
-  const id = req.params.id;
+  try {
+    const id = req.params.id;
 
-  const videoResult = await VideoResultService.getVideoResult(id);
-
-  if (videoResult === null) {
+    const videoResult = await VideoResultService.getVideoResult(id);
+  
+    if (videoResult === null) {
+      res
+        .status(404)
+        .json(
+          new ResponseDto(
+            false,
+            null,
+            "Video result with the given id not exists"
+          )
+        );
+    }
+  
+    const responseData = await VideoResultService.getVideoResultAnalysis(
+      videoResult
+    );
+  
     res
-      .status(404)
-      .json(
-        new ResponseDto(
-          false,
-          null,
-          "Video result with the given id not exists"
-        )
-      );
+      .status(200)
+      .json(new ResponseDto(true, responseData, "Successfully get video result"));
+  } catch (error) {
+    return res
+    .status(404)
+    .json(
+      new ResponseDto(false, e, e.message)
+    );
   }
 
-  const responseData = await VideoResultService.getVideoResultAnalysis(
-    videoResult
-  );
-
-  res
-    .status(200)
-    .json(new ResponseDto(true, responseData, "Successfully get video result"));
 };
 
 module.exports.uploadPhoto_post = async (req, res) => {

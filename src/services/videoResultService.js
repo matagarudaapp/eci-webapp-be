@@ -37,20 +37,33 @@ class VideoResultService {
   }
 
   async getAllVideoResult(needVerificationOnly = false, userId, roles) {
-    if (!needVerificationOnly && !roles.includes("ADMIN")) {
-      return await this.videoResultModel.findAll({
-        where: {
-          userId,
-        },
-        include: [
-          {
-            model: userModel,
-            attributes: {
-              exclude: ["password"],
-            },
+    if (!needVerificationOnly) {
+      if(!roles.includes("ADMIN")){
+        return await this.videoResultModel.findAll({
+          where: {
+            userId,
           },
-        ],
-      });
+          include: [
+            {
+              model: userModel,
+              attributes: {
+                exclude: ["password"],
+              },
+            },
+          ],
+        });
+      }else{
+        return await this.videoResultModel.findAll({
+          include: [
+            {
+              model: userModel,
+              attributes: {
+                exclude: ["password"],
+              },
+            },
+          ],
+        });
+      }
     }
 
     return await this.videoResultModel.findAll({

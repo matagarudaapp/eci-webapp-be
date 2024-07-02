@@ -18,6 +18,14 @@ class AuthService {
     return user;
   }
 
+  async forgotPasswordSet(newPassword){
+    
+  }
+
+  async forgotPasswordSend(){
+
+  }
+
   async login(email, password){
     // Find the user by email
     const user = await this.userModel.findOne({ where: { email } });
