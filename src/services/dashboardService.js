@@ -6,11 +6,16 @@ const getDashboardUserDataFromCsv = async (userId, roles) => {
     var videoResults = null;
 
     if(roles.includes("ADMIN")) {
-        videoResults = videoResultModel.findAll();
+        videoResults = videoResultModel.findAll({
+            where: {
+                detectionStatus: "VERIFIED"
+            }
+    });
     }else{
         videoResults = await videoResultModel.findAll({
             where: {
                 userId,
+                detectionStatus: "VERIFIED"
             },
         });
     }
@@ -45,8 +50,7 @@ const getDashboardUserDataFromCsv = async (userId, roles) => {
         }
 
         const csvData = parse(csvContentString, {
-            columns: true,
-            skip_empty_lines: true,
+            columns: true
         });
 
         // console.log(csvData);
