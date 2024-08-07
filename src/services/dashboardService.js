@@ -6,7 +6,7 @@ const getDashboardUserDataFromCsv = async (userId, roles) => {
     var videoResults = null;
 
     if(roles.includes("ADMIN")) {
-        videoResults = videoResultModel.findAll();
+        videoResults = await videoResultModel.findAll();
     }else{
         videoResults = await videoResultModel.findAll({
             where: {

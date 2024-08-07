@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
         forgotPasswordUrlUuid: {
           type: DataTypes.STRING,
           allowNull: true,
+        },
+        forgotPasswordRequestedAt: {
+          type: DataTypes.DATE,
+          allowNull: true,
         }
       });
     return User;

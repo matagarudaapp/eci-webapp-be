@@ -1,7 +1,7 @@
 require("dotenv").config();
 const db = require("./src/models");
 db.sequelize
-  .sync()
+  .sync({ alter: true })
   .then(() => {
     console.log("Synced db.");
 
@@ -18,6 +18,7 @@ db.sequelize
     const testRoutes = require("./src/routes/testRoute");
     const videoResultRoutes = require("./src/routes/videoResultRoute");
     const dashboardRoutes = require("./src/routes/dashboardRoute");
+    const forgotPasswordRoutes = require('./src/routes/forgotPasswordRoute')
 
     // middleware
     app.use(express.static("public"));
@@ -70,9 +71,11 @@ db.sequelize
     // app.get('/', (req, res) => res.render('home'));
     // app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
     app.use("/auth", authRoutes);
+    
     app.use("/test", authMiddleware.requireAuth, testRoutes);
     app.use("/videoResult", authMiddleware.requireAuth, videoResultRoutes);
-    app.use('/dashboard', dashboardRoutes)
+    app.use('/dashboard', dashboardRoutes);
+    app.use('/forgot-password', forgotPasswordRoutes);
 
     app.listen(port, () => {
       console.log(`Example app listening on port ${port}`);
