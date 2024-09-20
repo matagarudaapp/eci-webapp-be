@@ -1,7 +1,7 @@
 require("dotenv").config();
 const db = require("./src/models");
 db.sequelize
-  .sync({ alter: true })
+  .sync({alter: true})
   .then(() => {
     console.log("Synced db.");
 

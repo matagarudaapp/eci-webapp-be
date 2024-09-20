@@ -186,7 +186,7 @@ module.exports.videoResultAnalysis = async (req, res) => {
     return res
     .status(404)
     .json(
-      new ResponseDto(false, e, e.message)
+      new ResponseDto(false, error, error.message)
     );
   }
 
