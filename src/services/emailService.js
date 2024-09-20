@@ -38,8 +38,8 @@ const sendForgotPasswordEmail = async (email) => {
             from: `"Matagaruda" <${process.env.EMAIL_USER}>`, // sender address
             to: email, // list of receivers
             subject: "Password Reset", // Subject line
-            text: `You requested a password reset. Click the link below to reset your password:\n\n${resetPasswordUrl}`, // plain text body
-            html: `<p>You requested a password reset. Click the link below to reset your password:</p><p><a href="${resetPasswordUrl}">${resetPasswordUrl}</a></p>` // html body
+            text: `You requested a password reset. Click the link below to reset your password:\n\n${resetPasswordUrl}\n\nThis link will only valid for 1 hours`, // plain text body
+            html: `<p>You requested a password reset. Click the link below to reset your password:</p><p><a href="${resetPasswordUrl}">${resetPasswordUrl}</a></p><p>This link will only valid for 1 hours</p>` // html body
         };
 
         // Send the email

@@ -47,14 +47,6 @@ class AuthService {
       throw new Error('User not found');
     }
 
-    // Verify the password
-    const isMatch = await bcrypt.compare(reqBody.oldPassword, user.password);
-
-    // If the password is incorrect, throw an error
-    if (!isMatch) {
-      throw new Error('Invalid old password');
-    }
-
     const hashedNewPassword = await bcrypt.hash(reqBody.newPassword, 10);
     user.password = hashedNewPassword;
     user.forgotPasswordUrlUuid = null;
