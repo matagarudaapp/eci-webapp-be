@@ -1,5 +1,40 @@
 require("dotenv").config();
 const db = require("./src/models");
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
+// const app = express();
+// const port = 3030;
+
+const microServiceProxy = createProxyMiddleware({
+  target: 'http://localhost:8000',
+  changeOrigin: true,
+  prependPath: false,
+  pathRewrite: (path, req) => {
+    return '/api' + path;
+  },
+  onProxyReq: (proxyReq, req, res) => {
+    console.log(`Proxying to FastAPI: ${req.method} ${proxyReq.path}`);
+    
+    // Add ngrok-skip-browser-warning header to bypass ngrok warnings
+    proxyReq.setHeader('ngrok-skip-browser-warning', '1');
+  },
+  // Add headers to the proxied response
+  onProxyRes: (proxyRes, req, res) => {
+    // Ensure CORS headers are set on the response
+    proxyRes.headers['Access-Control-Allow-Origin'] = '*';
+    proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+    proxyRes.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization, ngrok-skip-browser-warning';
+  },
+  onError: (err, req, res) => {
+    console.error('Proxy Error:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Error connecting to micro-service',
+      error: err.message
+    });
+  }
+});
+
 db.sequelize
   .sync({alter: true})
   .then(() => {
@@ -18,21 +53,24 @@ db.sequelize
     const testRoutes = require("./src/routes/testRoute");
     const videoResultRoutes = require("./src/routes/videoResultRoute");
     const dashboardRoutes = require("./src/routes/dashboardRoute");
-
+    
     // middleware
+    app.use('/api', microServiceProxy);
     app.use(express.static("public"));
     app.use(express.json());
 
-    // corsMiddleware
-  //   const corsOptions = {
-  //     origin: 'https://eci-webapp-staging.vercel.app',
-  //     methods: 'GET,POST,PUT,DELETE,OPTIONS,PATCH',
-  //     allowedHeaders: 'Content-Type,Authorization',
-  //     credentials: true,
-  //     optionsSuccessStatus: 204, // Some legacy browsers (IE11, various SmartTVs) choke on 204
-  //     maxAge: 3600 // Cache the preflight response for 1 hour
-  // };
-  //   app.use(cors(corsOptions));
+    // CORS middleware
+    app.use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, ngrok-skip-browser-warning, access-control-allow-origin');
+      
+      if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+      }
+      
+      next();
+    });
 
     // swaggerMiddleware
     const options = {
@@ -75,9 +113,11 @@ db.sequelize
     app.use('/dashboard', dashboardRoutes)
 
     app.listen(port, () => {
-      console.log(`Example app listening on port ${port}`);
+      console.log(`Express server listening on port ${port}`);
+      console.log(`Proxying /api requests to FastAPI on port 8000`);
     });
   })
   .catch((err) => {
     console.log("Failed to sync db: " + err.message);
   });
+  
