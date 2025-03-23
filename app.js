@@ -46,6 +46,8 @@ db.sequelize
     const app = express();
     const port = 3030
     const swaggerJsdoc = require("swagger-jsdoc");
+    const fs = require('fs');
+    const path = require('path');
     const swaggerUi = require("swagger-ui-express");
     const authMiddleware = require("./src/middlewares/authMiddleware");
 
@@ -54,11 +56,20 @@ db.sequelize
     const videoResultRoutes = require("./src/routes/videoResultRoute");
     const dashboardRoutes = require("./src/routes/dashboardRoute");
     const forgotPasswordRoutes = require('./src/routes/forgotPasswordRoute')
+    const videoUploadRoutes = require("./src/routes/videoUploadRoute");
     
     // middleware
     app.use('/api', microServiceProxy);
     app.use(express.static("public"));
     app.use(express.json());
+
+    app.use(express.json({ limit: '5gb' }));
+    app.use(express.urlencoded({ extended: true, limit: '5gb' }));
+
+    const uploadDir = path.join(__dirname, 'temp-uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
 
     // CORS middleware
     app.use((req, res, next) => {
@@ -114,11 +125,13 @@ db.sequelize
     app.use("/videoResult", authMiddleware.requireAuth, videoResultRoutes);
     app.use('/dashboard', dashboardRoutes);
     app.use('/forgot-password', forgotPasswordRoutes);
+    app.use("/videoUpload", authMiddleware.requireAuth, videoUploadRoutes);
 
-    app.listen(port, () => {
+    const server = app.listen(port, () => {
       console.log(`Express server listening on port ${port}`);
       console.log(`Proxying /api requests to FastAPI on port 8000`);
     });
+    server.timeout = 3600000;
   })
   .catch((err) => {
     console.log("Failed to sync db: " + err.message);
