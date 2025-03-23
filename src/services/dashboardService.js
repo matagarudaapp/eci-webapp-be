@@ -6,11 +6,12 @@ const getDashboardUserDataFromCsv = async (userId, roles) => {
     var videoResults = null;
 
     if(roles.includes("ADMIN")) {
-        videoResults = videoResultModel.findAll({
-            where: {
-                detectionStatus: "VERIFIED"
-            }
-    });
+        videoResults = await videoResultModel.findAll();
+    //     videoResults = videoResultModel.findAll({
+    //         where: {
+    //             detectionStatus: "VERIFIED"
+    //         }
+    // });
     }else{
         videoResults = await videoResultModel.findAll({
             where: {

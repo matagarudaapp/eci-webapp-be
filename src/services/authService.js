@@ -18,12 +18,42 @@ class AuthService {
     return user;
   }
 
-  async forgotPasswordSet(newPassword){
-    
+  async forgotPasswordGet(forgotPasswordUrlUuid){
+    const user = await User.findOne({ where: { forgotPasswordUrlUuid } });
+
+    const now = new Date();
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+
+    if (!user) {
+      throw new Error('Link is invalid');
+    }
+
+    if(user.forgotPasswordRequestedAt && user.forgotPasswordRequestedAt < oneHourAgo){
+      user.forgotPasswordUrlUuid = null;
+      user.forgotPasswordRequestedAt = null;
+      user.save();
+      throw new Error('Link is invalid or outdated');
+    }
+
+
+    return { message: 'Success'};
   }
 
-  async forgotPasswordSend(){
+  async forgotPasswordPost(forgotPasswordUrlUuid, reqBody){
+    const user = await this.userModel.findOne({ where: { forgotPasswordUrlUuid } });
 
+    // If the user was not found, throw an error
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const hashedNewPassword = await bcrypt.hash(reqBody.newPassword, 10);
+    user.password = hashedNewPassword;
+    user.forgotPasswordUrlUuid = null;
+    user.forgotPasswordRequestedAt = null;
+    user.save();
+
+    return { message: 'Success'};
   }
 
   async login(email, password){
